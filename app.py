@@ -1,11 +1,17 @@
 from flask import Flask, render_template, request
 import boto3
+import os
 
 # Initialize Flask
 app = Flask(__name__)
 
-# Initialize AWS Translate client
-translate = boto3.client(service_name='translate', region_name='us-east-1')
+# Initialize AWS Translate client with credentials from Environment Variables
+translate = boto3.client(
+    service_name='translate',
+    region_name='us-east-1',
+    aws_access_key_id=os.getenv('AKIA3V7UXRTG52XI4UDY'),
+    aws_secret_access_key=os.getenv('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')
+)
 
 # Function to translate text
 def translate_text(text, source_language, target_language):
@@ -38,5 +44,9 @@ def translate_route():
     # Return the result to the template
     return render_template('index.html', translated_text=translated_text)
 
+# Make app accessible to Render
+application = app
+
+# Run app locally (only when testing)
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host='0.0.0.0', port=10000, debug=True)
